@@ -1,6 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from keyboards.default.user import menu
 
-menu = ReplyKeyboardMarkup(
+admin_menu = ReplyKeyboardMarkup(
     keyboard=[
         [
             KeyboardButton(text="Добавить товар"),

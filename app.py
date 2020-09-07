@@ -14,8 +14,8 @@ async def on_startup(dp):
     await db_gino.on_startup(dp)
     print("Готово")
 
-    print("Чистим базу")
-    await db.gino.drop_all()
+    # print("Чистим базу")
+    # await db.gino.drop_all()
 
     print("Готово")
 

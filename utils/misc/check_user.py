@@ -11,7 +11,7 @@ async def is_product_admin(user_id: int):
     return False
 
 
-async def is_registered_user(user_id: int):
+def is_registered_user(user_id: int):
     user_ids = await commands.select_users_ids()
     # if user_id in user_ids or user_id in sa:
     if user_id in user_ids:

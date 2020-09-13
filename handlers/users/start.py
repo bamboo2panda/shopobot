@@ -33,6 +33,26 @@ async def check_user_registration(message):
     else:
         await get_referral_id(message)
 
+# Перехватываем все команды /start
+@dp.message_handler(
+    lambda message: True if is_registered_user(int(message.from_user.id)) else False,
+    CommandStart()
+    )
+# @dp.message_handler(func= lambda message: is_registered_user(int(message.from_user.id)),
+#    CommandStart()
+#     )
+async def bot_start_registered_user(message: types.Message):
+    await message.answer(f'Привет, {message.from_user.full_name}!')
+    await hello_answer(message)
+
+
+@dp.message_handler(CommandStart())
+async def bot_start(message: types.Message):
+    referral = message.get_args()
+    await message.answer(f'Привет, {message.from_user.full_name}!')
+    await message.answer(f'Нужно зарегистрироваться.')
+    await manage_new_visitor(message, referral)
+
 
 async def manage_new_visitor(message, referral):
     if await check_referral(referral):

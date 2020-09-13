@@ -23,10 +23,10 @@ async def show_item(message: types.Message, id: int):
     item = await select_item(id)
     await message.answer_photo(
         photo=item.photo,
-        caption=item.name,
     )
     await message.answer(
-        text=f"{item.description}\n"
+        text=f"<b>{item.name}</b>\n"
+             f"{item.description}\n"
              f"Цена: {item.price}",
         reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[

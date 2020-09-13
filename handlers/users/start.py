@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import CommandStart
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from data.config import super_admins
 from handlers.users.item import show_item_from_message
@@ -67,9 +68,19 @@ async def add_new_user(message, referral):
 
 async def hello_answer(message):
     await message.answer("Добро пожаловать!")
-    await message.answer("Введите /help чтобы узнать все комадны\n"
+    await message.answer(text="Введите /help чтобы узнать все комадны\n"
                          "Ввудите /menu чтобы посмотреть все товары\n"
-                         "Приятных покупок!")
+                         "Приятных покупок!",
+                         reply_markup=InlineKeyboardMarkup(
+                             inline_keyboard=[
+                                 [
+                                     InlineKeyboardButton(
+                                         text="Перейти в инлайн режим для покупки",
+                                         switch_inline_query_current_chat=""
+                                     )
+                                 ]
+                             ]
+                         )),
 
 
 async def has_referral(param):

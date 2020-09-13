@@ -7,6 +7,7 @@ from utils.db_api.commands.item_db_commands import search_item_by_name
 from utils.misc.check_user import is_registered_user
 
 
+@dp.inline_handler(lambda query: True if is_registered_user(int(query.from_user.id)) else False)
 @dp.inline_handler(text="")
 async def handle_empty_query(query: types.InlineQuery):
     user_id = query.from_user.id

@@ -3,6 +3,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import CommandStart
 
 from data.config import super_admins
+from handlers.users.item import show_item_from_message
 from loader import dp
 from states.shop_administration.referrals import CheckReferral
 from utils.db_api.commands import user_db_commands as commands
@@ -10,44 +11,47 @@ from utils.misc.check_user import check_referral, is_registered_user
 
 
 # Перехватываем все команды /start
+
+
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
     user_id = int(message.from_user.id)
-    referral = message.get_args()
+    param = message.get_args()
 
-    await message.answer(f'Привет, {message.from_user.full_name}!')
-
-    if is_registered_user(user_id):
-        await hello_answer(message)
-    else:
+    if await is_registered_user(user_id):
+        await show_item_from_message(message)
+    elif await has_referral(param):
+        referral = int(param.split("referral_", 1)[1])
         await manage_new_visitor(message, referral)
+    else:
+        await get_referral_id(message)
 
 
 async def manage_new_visitor(message, referral):
-    if referral:
-        referral_is_valid = await check_referral(message=message, referral=referral)
-        if referral_is_valid:
-            await add_new_user(message, referral)
-        else:
-            await get_referral_id(message, referral)
+    if await check_referral(referral):
+        await add_new_user(message, referral)
     else:
         await get_referral_id(message, referral)
 
 
 async def get_referral_id(message: types.Message, state: FSMContext = None, referral: int = None, ):
-    await message.answer("Введите код приглашения")
+    await message.answer("Вы ещё не зарегистрировались.\n"
+                         "Введите код приглашения")
     if state is None:
         await CheckReferral.Get.set()
-    await state.update_data(
-        dict(referral=referral)
-    )
+    else:
+        await state.update_data(
+            {
+                "referral": referral
+            }
+        )
 
 
 @dp.message_handler(state=CheckReferral.Get)
 async def check_referral_message(message: types.Message, state: FSMContext):
-    check = await check_referral(message)
-    if check:
-        await add_new_user(message, state.get_data("referral"))
+    referral = int(message.text)
+    if await check_referral(referral):
+        await add_new_user(message, referral)
         await state.finish()
     else:
         await message.answer("Неверный код, попробуйте ещё раз.")
@@ -66,3 +70,9 @@ async def hello_answer(message):
     await message.answer("Введите /help чтобы узнать все комадны\n"
                          "Ввудите /menu чтобы посмотреть все товары\n"
                          "Приятных покупок!")
+
+
+async def has_referral(param):
+    if "referral_" in param:
+        return True
+    return False

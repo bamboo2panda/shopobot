@@ -1,5 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher.filters import CommandStart
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from loader import dp, bot
 from utils.db_api.commands import item_db_commands as item_commands
@@ -50,11 +51,23 @@ async def show_inline_list_of_items(items, query):
                 thumb_url=item.photo,
                 url=bot_url + "?item=" + str(item.id),
                 input_message_content=types.InputTextMessageContent(
-                    message_text=f"<a href=\"{item.photo}\">&#8205;</a>\n"
-                                 f"<b>{item.name}</b>\n"
+                    message_text=f"<b>{item.name}</b>\n"
                                  f"{item.description}\n"
-                                 f"<a href=\"{bot_url}?start&item={item.id}\">Купить</a>\n\n",
-                    parse_mode="HTML"
+                                 f"Цена: {item.price}\n",
+                    parse_mode="HTML",
+                ), reply_markup=InlineKeyboardMarkup(
+                    inline_keyboard=[
+                        [
+                            InlineKeyboardButton(
+                                text="Посмотреть",
+                                # switch_pm_text="Бот недоступен. Подключить бота",
+                                # switch_pm_parameter="item_id={item.id}",
+                                # switch_inline_query_current_chat=f"item_id={item.id}",
+                                url=f"tg://resolve?domain=udemy_shopobot&start=item_{item.id}"
+                                # url=f"https://t.me/udemy_shopobot/?start=item_{item.id}"
+                            )
+                        ]
+                    ]
                 )
             )
             for item in items

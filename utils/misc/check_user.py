@@ -19,8 +19,8 @@ async def is_registered_user(user_id: int):
     return False
 
 
-async def check_referral(message: types.Message, **kwargs):
-    referral = int(kwargs.get('referral') if kwargs.get('referral') else int(message.text))
+async def check_referral(referral):
+    # referral = int(kwargs.get('referral') if hasattr(kwargs.get(), 'referral') else int(message.text))
     user_ids = await commands.select_users_ids()
     if referral in user_ids:
         return True

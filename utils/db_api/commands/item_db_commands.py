@@ -17,7 +17,7 @@ async def select_all_items():
     return items
 
 
-async def select_user(item_id: int):
+async def select_item(item_id: int):
     item = await Item.query.where(Item.id == item_id).gino.first()
     return item
 
@@ -27,6 +27,7 @@ async def count_items():
     return total
 
 
-async def update_user_email(user_id, email):
-    user = await Item.get(user_id)
-    await user.update(email=email).apply()
+async def search_item_by_name(name: str):
+    search = "%{}%".format(name)
+    result = await Item.query.where(Item.name.like(search)).gino.all()
+    return result

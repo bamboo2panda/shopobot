@@ -9,6 +9,10 @@ PGUSER = str(os.getenv("PGUSER"))
 PGPASSWORD = str(os.getenv("PGPASSWORD"))
 DATABASE = str(os.getenv("DATABASE"))
 
+QIWI_TOKEN = os.getenv("qiwi")
+WALLET_QIWI = os.getenv("wallet")
+QIWI_PUBKEY = os.getenv("qiwi_p_pub")
+
 super_admins = [
     os.getenv("ADMIN_ID"),
 ]

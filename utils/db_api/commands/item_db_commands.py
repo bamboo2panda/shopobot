@@ -31,3 +31,9 @@ async def search_item_by_name(name: str):
     search = "%{}%".format(name)
     result = await Item.query.where(Item.name.like(search)).gino.all()
     return result
+
+
+async def get_item_price(id: int):
+    points_object = await Item.query.with_only_columns(Item.price).where(Item.id == id).gino.first()
+    return points_object.__values__["price"]
+

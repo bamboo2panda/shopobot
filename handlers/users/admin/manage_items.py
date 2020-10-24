@@ -21,7 +21,6 @@ async def add_item_start(message: types.Message, state: FSMContext):
     await AddItem.Photo.set()
 
 
-# @dp.message_handler(state=AddItem.Photo)
 @dp.message_handler(state=AddItem.Photo)
 async def add_item_photo(message: types.Message, state: FSMContext):
     photo_url = message.text

@@ -38,6 +38,11 @@ async def select_users_ids():
     return ids
 
 
+async def get_user_points(id: int):
+    points_object = await User.query.with_only_columns(User.balance).where(User.id == id).gino.first()
+    return points_object.__values__["balance"]
+
+
 async def count_users():
     total = await db.func.count(User.id).gino.scalar()
     return total
@@ -46,3 +51,7 @@ async def count_users():
 async def update_user_email(id, email):
     user = await User.get(id)
     await user.update(email=email).apply()
+
+
+async def cut_points(user_id, amount):
+    User.update()

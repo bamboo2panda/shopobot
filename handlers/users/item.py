@@ -6,12 +6,9 @@ from utils.db_api.commands.item_db_commands import select_item
 
 async def show_item_from_message(message: types.Message):
     param = message.get_args()
-    if "item_" in param:
-        id = int(param.split("item_", 1)[1])
-        await show_item(message, id)
-        return True
-    else:
-        return False
+    user_id = int(param.split("item_", 1)[1])
+    await show_item(message, user_id)
+    return True
 
 
 async def show_item(message: types.Message, id: int):
